@@ -7,15 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-//@Service
-public class EmployeeJsonProducer {
+@Service
+public class HumanResProducer {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
-    private Logger logger = LoggerFactory.getLogger(EmployeeJsonProducer.class);
+    private Logger logger = LoggerFactory.getLogger(HumanResProducer.class);
     private ObjectMapper objectMapper = new ObjectMapper();
 
     public void sendEmployee(Employee employee) {
@@ -25,6 +24,10 @@ public class EmployeeJsonProducer {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        rabbitTemplate.convertAndSend("course.employee", emp);
+        if (Math.random() * 10 > 5) {
+            rabbitTemplate.convertAndSend("x.hr", "q.hr.accounting", emp);
+        } else {
+            rabbitTemplate.convertAndSend("x.hr", "q.hr.marketing", emp);
+        }
     }
 }
